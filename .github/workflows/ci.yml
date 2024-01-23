@@ -1,0 +1,27 @@
+name: CI
+
+on:
+    pull_request:
+    push:
+        branches: ['main']
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v3
+            - name: Setup node version
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '20.9.0'
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Lint
+              run: npm run lint
+
+            - name: Compile
+              run: npm run compile

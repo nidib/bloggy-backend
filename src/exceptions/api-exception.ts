@@ -6,4 +6,4 @@ export class ApiException extends Error {
 
 		this.code = code;
 	}
- }
+}
