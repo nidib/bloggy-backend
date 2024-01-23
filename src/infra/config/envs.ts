@@ -1,11 +1,13 @@
-function getEnv(env: string, fallback?: string) {
-	return process.env[env] ?? fallback;
+function getEnv(env: string) {
+	const value = process.env[env];
+
+	return value;
 }
 
 function getEnvOrThrow(env: string) {
 	const value = getEnv(env);
 
-	if (value === undefined) {
+	if (!value) {
 		throw new Error(`Required environment variable "${env}" not found`);
 	}
 
@@ -14,7 +16,6 @@ function getEnvOrThrow(env: string) {
 
 export const envs = {
 	databaseUrl: getEnvOrThrow('DATABASE_URL'),
-	serverPort: 8080,
-	serverHost: '0.0.0.0',
-	commitHash: getEnv('COMMIT_HASH', ''),
-};
+	serverPort: Number(getEnv('SERVER_PORT') ?? '8080'),
+	commitHash: getEnv('COMMIT_HASH') ?? '',
+} as const;

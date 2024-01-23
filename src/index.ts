@@ -2,6 +2,7 @@ import { serve } from '@hono/node-server';
 import type { Options } from '@hono/node-server/dist/types';
 
 import { makeApp } from 'src/app';
+import { envs } from 'src/infra/config/envs';
 import { postgres } from 'src/infra/databases/postgres/postgres';
 
 async function setupDatabase() {
@@ -13,7 +14,7 @@ async function main() {
 
 	const app: Options = {
 		hostname: '0.0.0.0',
-		port: 8080,
+		port: envs.serverPort,
 		fetch: makeApp().fetch,
 	};
 
