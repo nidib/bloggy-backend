@@ -1,0 +1,29 @@
+{
+	"name": "bloggy-backend",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "tsx --env-file=.env src/index.ts",
+		"dev": "tsx watch --inspect --env-file=.env src/index.ts",
+		"lint": "prettier . --check",
+		"compile": "tsc --noEmit"
+	},
+	"author": "",
+	"license": "ISC",
+	"volta": {
+		"node": "20.9.0"
+	},
+	"dependencies": {
+		"@hono/node-server": "^1.5.0",
+		"hono": "^3.12.6",
+		"http-status-codes": "^2.3.0",
+		"tsx": "^4.7.0",
+		"typescript": "^5.3.3",
+		"zod": "^3.22.4"
+	},
+	"devDependencies": {
+		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
+		"prettier": "^3.2.4"
+	}
+}
