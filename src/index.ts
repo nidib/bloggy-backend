@@ -2,13 +2,13 @@ import { serve } from '@hono/node-server';
 import type { Options } from '@hono/node-server/dist/types';
 
 import { makeApp } from 'src/app';
+import { postgres } from 'src/infra/databases/postgres/postgres';
 
-function setupDatabase() {
-	return Promise.all([]);
+async function setupDatabase() {
+	postgres.migrate();
 }
 
 async function main() {
-	// validateEnvs();
 	await setupDatabase();
 
 	const app: Options = {
@@ -17,7 +17,7 @@ async function main() {
 		fetch: makeApp().fetch,
 	};
 
-	let server = serve(app, options => {
+	serve(app, options => {
 		console.info(`Server listening at http://${options.address}:${options.port}`);
 	});
 }
