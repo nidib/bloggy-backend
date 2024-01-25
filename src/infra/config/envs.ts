@@ -18,4 +18,5 @@ export const envs = {
 	databaseUrl: getEnvOrThrow('DATABASE_URL'),
 	serverPort: Number(getEnv('SERVER_PORT') ?? '8080'),
 	commitHash: getEnv('COMMIT_HASH') ?? '',
+	jwtKey: getEnvOrThrow('JWT_KEY'),
 } as const;
