@@ -25,3 +25,6 @@ jobs:
 
             - name: Compile
               run: npm run compile
+
+            - name: Unit tests
+              run: npm run test

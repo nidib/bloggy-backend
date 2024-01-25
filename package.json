@@ -7,7 +7,8 @@
 		"start": "tsx --env-file=.env src/index.ts",
 		"dev": "tsx watch --inspect --env-file=.env src/index.ts",
 		"lint": "prettier . --check",
-		"compile": "tsc --noEmit"
+		"compile": "tsc --noEmit",
+		"test": "vitest run --passWithNoTests --config ./src/__tests__/setup.ts"
 	},
 	"author": "",
 	"license": "ISC",
@@ -16,8 +17,11 @@
 	},
 	"dependencies": {
 		"@hono/node-server": "^1.5.0",
+		"bcrypt": "^5.1.1",
+		"drizzle-orm": "^0.29.3",
 		"hono": "^3.12.6",
 		"http-status-codes": "^2.3.0",
+		"jsonwebtoken": "^9.0.2",
 		"postgrator": "^7.2.0",
 		"postgres": "^3.4.3",
 		"tsx": "^4.7.0",
@@ -26,7 +30,10 @@
 	},
 	"devDependencies": {
 		"@trivago/prettier-plugin-sort-imports": "^4.3.0",
+		"@types/bcrypt": "^5.0.2",
+		"@types/jsonwebtoken": "^9.0.5",
 		"@types/node": "^20.11.5",
-		"prettier": "^3.2.4"
+		"prettier": "^3.2.4",
+		"vitest": "^1.2.1"
 	}
 }
