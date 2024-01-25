@@ -4,8 +4,11 @@ import { default as pg } from 'postgres';
 import { envs } from 'src/infra/config/envs';
 import { migrator } from 'src/infra/databases/postgres/migrator';
 
-const client = pg(envs.databaseUrl);
-const ormConnection = drizzle(client, { logger: true });
+const noop = () => {};
+
+const databaseUrl = `${envs.databaseUrl}/${envs.databaseName}`;
+const client = pg(databaseUrl, { onnotice: noop });
+const ormConnection = drizzle(client, { logger: false });
 
 export class Postgres {
 	static connection = ormConnection;
@@ -19,6 +22,6 @@ export class Postgres {
 	}
 
 	static async migrate(): Promise<void> {
-		migrator.migrate();
+		await migrator.migrate();
 	}
 }

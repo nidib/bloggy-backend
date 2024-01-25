@@ -1,57 +1,39 @@
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { CreateUserService } from 'src/domains/user/services/create-user-service';
 import { UserAlreadyExistsException } from 'src/exceptions/user-already-exists-exception';
+import { UserPostgresRepository } from 'src/infra/databases/postgres/repositories/user-postgres-repository';
 
-function makeUserRepositoryMock() {
-	return {
-		getOneByUsername: vi.fn().mockResolvedValue(null),
-		createOne: vi.fn(),
-		getOneById: vi.fn(),
-	};
-}
+const userPostgresRepository = new UserPostgresRepository();
 
 describe('CreateUserService', () => {
 	it('Should create an user if username does not exist yet', async () => {
-		const userRepositoryMock = makeUserRepositoryMock();
-		const createUserService = new CreateUserService(userRepositoryMock);
+		const createUserService = new CreateUserService(userPostgresRepository);
 		const newUser = { username: 'johndoe', password: 'qwe123', fullName: 'John Doe' };
 
-		await createUserService.execute(newUser);
+		const createdUser = await createUserService.execute(newUser);
 
-		expect(userRepositoryMock.createOne).toHaveBeenCalledTimes(1);
-		expect(userRepositoryMock.createOne).toHaveBeenCalledWith(
-			expect.objectContaining({
-				username: newUser.username,
-				fullName: 'John Doe',
-			})
-		);
+		expect(await userPostgresRepository.getOneById(createdUser.id)).toBeTruthy();
 	});
 
-	it('Should create an user if username with hashed password', async () => {
-		const userRepositoryMock = makeUserRepositoryMock();
-		const createUserService = new CreateUserService(userRepositoryMock);
+	it('Should create an user with hashed password', async () => {
+		const createUserService = new CreateUserService(userPostgresRepository);
 		const newUser = { username: 'johndoe', password: 'qwe123', fullName: 'John Doe' };
 
-		await createUserService.execute(newUser);
+		const { password } = await createUserService.execute(newUser);
 
-		expect(userRepositoryMock.createOne).toHaveBeenCalledTimes(1);
-		expect(userRepositoryMock.createOne).toHaveBeenCalledWith(
-			expect.objectContaining({
-				password: expect.not.stringMatching(newUser.password),
-			})
-		);
+		expect(password).toBeTypeOf('string');
+		expect(password).not.equal(newUser.password);
 	});
 
 	it('Should throw exception if username already exists', async () => {
-		const userRepositoryMock = makeUserRepositoryMock();
-		const createUserService = new CreateUserService(userRepositoryMock);
+		const createUserService = new CreateUserService(userPostgresRepository);
 		const newUser = { username: 'johndoe', password: 'qwe123', fullName: 'John Doe' };
-		const existingUser = { ...newUser, id: 'b1c2e1a4-e590-4af0-a77e-c23480e15481' };
-		userRepositoryMock.getOneByUsername = vi.fn().mockResolvedValue(existingUser);
 
-		await expect(createUserService.execute(newUser)).rejects.toMatchObject(
-			new UserAlreadyExistsException(existingUser.username)
-		);
+		const { username } = await createUserService.execute(newUser);
+
+		await expect(
+			createUserService.execute({ username, password: 'another-password', fullName: 'Another name' })
+		).rejects.toMatchObject(new UserAlreadyExistsException(username));
 	});
 });

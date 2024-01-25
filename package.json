@@ -8,7 +8,7 @@
 		"dev": "tsx watch --inspect --env-file=.env src/index.ts",
 		"lint": "prettier . --check",
 		"compile": "tsc --noEmit",
-		"test": "vitest run --passWithNoTests --config ./src/__tests__/setup.ts",
+		"test": "vitest run --passWithNoTests --config ./src/__tests__/config.ts",
 		"test:coverage": "npm run test -- --coverage"
 	},
 	"author": "",
@@ -19,6 +19,7 @@
 	"dependencies": {
 		"@hono/node-server": "^1.5.0",
 		"bcrypt": "^5.1.1",
+		"dotenv": "^16.4.1",
 		"drizzle-orm": "^0.29.3",
 		"hono": "^3.12.6",
 		"http-status-codes": "^2.3.0",

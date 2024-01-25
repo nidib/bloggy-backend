@@ -7,7 +7,8 @@ import { envs } from 'src/infra/config/envs';
 const MIGRATION_MAX_CONNECTIONS = 1;
 const MIGRATION_IDLE_TIMEOUT_IN_SECONDS = 60;
 
-const migrationConnection = postgres(envs.databaseUrl, {
+const databaseUrl = `${envs.databaseUrl}/${envs.databaseName}`;
+const migrationConnection = postgres(databaseUrl, {
 	max: MIGRATION_MAX_CONNECTIONS,
 	idle_timeout: MIGRATION_IDLE_TIMEOUT_IN_SECONDS,
 });
@@ -15,7 +16,7 @@ const migrationConnection = postgres(envs.databaseUrl, {
 export const migrator = new Postgrator({
 	migrationPattern: path.resolve(__dirname, 'migrations/*'),
 	driver: 'pg',
-	database: 'bloggy',
+	database: envs.databaseName,
 	schemaTable: 'main.migration_schema',
 	currentSchema: 'main',
 	async execQuery(query) {
