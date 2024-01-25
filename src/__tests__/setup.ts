@@ -10,8 +10,8 @@ async function cleanupDatabase() {
 }
 
 beforeAll(async () => {
-	await cleanupDatabase();
 	await Postgres.migrate();
+	await cleanupDatabase();
 });
 
 afterEach(async () => {
