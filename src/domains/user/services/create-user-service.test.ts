@@ -7,6 +7,7 @@ function makeUserRepositoryMock() {
 	return {
 		getOneByUsername: vi.fn().mockResolvedValue(null),
 		createOne: vi.fn(),
+		getOneById: vi.fn(),
 	};
 }
 

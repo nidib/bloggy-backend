@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import { CreateUserService } from 'src/domains/user/services/create-user-service';
 import { LoginUserService } from 'src/domains/user/services/login-user-service';
-import { UserRepository } from 'src/infra/databases/postgres/repositories/user-repository';
+import { UserPostgresRepository } from 'src/infra/databases/postgres/repositories/user-postgres-repository';
 
 const registerUserSchemas = {
 	request: z.object({
@@ -31,7 +31,7 @@ const loginUserSchemas = {
 
 export function makeAuthRoutes() {
 	const routes = new Hono();
-	const userPostgresRepository = new UserRepository();
+	const userPostgresRepository = new UserPostgresRepository();
 	const createUserService = new CreateUserService(userPostgresRepository);
 	const loginUserService = new LoginUserService(userPostgresRepository);
 
