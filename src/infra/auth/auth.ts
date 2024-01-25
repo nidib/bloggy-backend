@@ -1,6 +1,7 @@
 import { compare, hash } from 'bcrypt';
-import { sign } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 
+import { UnauthorizedException } from 'src/exceptions/unauthorized-exception';
 import { envs } from 'src/infra/config/envs';
 
 const SALT_ROUNDS = 10;
@@ -17,5 +18,15 @@ export class Auth {
 
 	static async makeAuthToken(userId: string): Promise<string> {
 		return sign({ userId }, envs.jwtKey, { expiresIn: SEVEN_DAYS });
+	}
+
+	static async validateToken(token: string): Promise<{ userId: string }> {
+		try {
+			const payload = verify(token, envs.jwtKey) as { userId: string };
+
+			return payload;
+		} catch (_) {
+			throw new UnauthorizedException();
+		}
 	}
 }
