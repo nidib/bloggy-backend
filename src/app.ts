@@ -4,13 +4,16 @@ import { ZodError } from 'zod';
 
 import { ApiException } from 'src/exceptions/api-exception';
 import { RouteNotFoundException } from 'src/exceptions/route-not-found-exception';
-import { makeAuthRoutes } from 'src/routes/user/auth-routes';
+import { makeArticleRoutes } from 'src/routes/article/article-routes';
+import { makeAuthRoutes } from 'src/routes/auth/auth-routes';
 
 export function makeApp() {
 	const app = new Hono();
 	const authRoutes = makeAuthRoutes();
+	const articleRoutes = makeArticleRoutes();
 
 	app.route('/', authRoutes);
+	app.route('/posts/', articleRoutes);
 
 	app.onError((e, c) => {
 		if (e instanceof ApiException) {
