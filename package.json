@@ -8,7 +8,8 @@
 		"dev": "tsx watch --inspect --env-file=.env src/index.ts",
 		"lint": "prettier . --check",
 		"compile": "tsc --noEmit",
-		"test": "vitest run --passWithNoTests --config ./src/__tests__/setup.ts"
+		"test": "vitest run --passWithNoTests --config ./src/__tests__/setup.ts",
+		"test:coverage": "npm run test -- --coverage"
 	},
 	"author": "",
 	"license": "ISC",
@@ -33,6 +34,7 @@
 		"@types/bcrypt": "^5.0.2",
 		"@types/jsonwebtoken": "^9.0.5",
 		"@types/node": "^20.11.5",
+		"@vitest/coverage-istanbul": "^1.2.1",
 		"prettier": "^3.2.4",
 		"vitest": "^1.2.1"
 	}

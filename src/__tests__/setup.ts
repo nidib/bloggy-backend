@@ -6,5 +6,8 @@ export default defineConfig({
 			DATABASE_URL: 'fakeurl',
 			JWT_KEY: 'faketoken',
 		},
+		coverage: {
+			provider: 'istanbul',
+		},
 	},
 });
