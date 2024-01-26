@@ -6,14 +6,17 @@ import { ApiException } from 'src/exceptions/api-exception';
 import { RouteNotFoundException } from 'src/exceptions/route-not-found-exception';
 import { makeArticleRoutes } from 'src/routes/article/article-routes';
 import { makeAuthRoutes } from 'src/routes/auth/auth-routes';
+import { makeUserRoutes } from 'src/routes/user/user-routes';
 
 export function makeApp() {
 	const app = new Hono();
 	const authRoutes = makeAuthRoutes();
 	const articleRoutes = makeArticleRoutes();
+	const userRoutes = makeUserRoutes();
 
 	app.route('/', authRoutes);
-	app.route('/posts/', articleRoutes);
+	app.route('/posts', articleRoutes);
+	app.route('/user', userRoutes);
 
 	app.onError((e, c) => {
 		if (e instanceof ApiException) {
