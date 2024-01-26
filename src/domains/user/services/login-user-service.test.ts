@@ -37,7 +37,7 @@ describe('LoginUserService', () => {
 			fullName: 'John Doe',
 		});
 
-		expect(loginUserService.execute({ username: 'doejohn', password })).rejects.toMatchObject(
+		await expect(loginUserService.execute({ username: 'doejohn', password })).rejects.toMatchObject(
 			new UserOrPasswordIncorrectException()
 		);
 	});
@@ -52,7 +52,7 @@ describe('LoginUserService', () => {
 			fullName: 'John Doe',
 		});
 
-		expect(loginUserService.execute({ username, password: '123qwe' })).rejects.toMatchObject(
+		await expect(loginUserService.execute({ username, password: '123qwe' })).rejects.toMatchObject(
 			new UserOrPasswordIncorrectException()
 		);
 	});

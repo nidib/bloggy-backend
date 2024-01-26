@@ -39,7 +39,7 @@ describe('ToggleBookmarkSerivce', () => {
 		const toggleBookmarkSerivce = new ToggleBookmarkService(bookmarkRepository, articleRepository);
 		const user = await userRepository.createOne({ username: 'johndoe', password: 'qwe123', fullName: 'John Doe' });
 
-		expect(toggleBookmarkSerivce.execute(randomUUID(), user.id)).rejects.toMatchObject(
+		await expect(toggleBookmarkSerivce.execute(randomUUID(), user.id)).rejects.toMatchObject(
 			new ArticleNotFoundException()
 		);
 	});

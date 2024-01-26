@@ -24,6 +24,6 @@ describe('GetUserByIdService', () => {
 	it('Should not return user if does not exist', async () => {
 		const getUserByIdService = new GetUserByIdService(userPostgresRepository);
 
-		expect(getUserByIdService.execute(randomUUID())).rejects.toMatchObject(new UserDoesNotExistException());
+		await expect(getUserByIdService.execute(randomUUID())).rejects.toMatchObject(new UserDoesNotExistException());
 	});
 });
