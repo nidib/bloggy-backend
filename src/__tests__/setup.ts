@@ -4,7 +4,7 @@ import { afterAll, afterEach, beforeAll } from 'vitest';
 import { Postgres } from 'src/infra/databases/postgres/postgres';
 
 async function cleanupDatabase() {
-	await Postgres.connection.execute(sql`TRUNCATE TABLE main.bookmark CASCADE`);
+	await Postgres.connection.execute(sql`TRUNCATE main.bookmark CASCADE`);
 	await Postgres.connection.execute(sql`TRUNCATE main.article CASCADE`);
 	await Postgres.connection.execute(sql`TRUNCATE main.user CASCADE`);
 }
