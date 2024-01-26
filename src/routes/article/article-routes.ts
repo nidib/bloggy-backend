@@ -95,7 +95,7 @@ export function makeArticleRoutes() {
 	const createArticleService = new CreateArticleService(articlePostgresRepository, userPostgresRepository);
 	const getArticleByIdService = new GetArticleByIdService(articlePostgresRepository, userPostgresRepository);
 	const deleteArticleByIdService = new DeleteArticleByIdService(articlePostgresRepository, userPostgresRepository);
-	const updateArticleByIdService = new UpdateArticleByIdService(articlePostgresRepository);
+	const updateArticleByIdService = new UpdateArticleByIdService(articlePostgresRepository, userPostgresRepository);
 	const getAllArticlesService = new GetAllArticlesService(articlePostgresRepository);
 	const toggleBookmarkService = new ToggleBookmarkService(
 		bookmarkPostgresRepository,
