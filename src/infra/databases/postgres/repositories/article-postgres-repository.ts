@@ -108,7 +108,11 @@ export class ArticlePostgresRepository implements ArticleRepository {
 		let articles: SelectArticleWithUser[] = [];
 
 		for (const row of rows) {
-			const { article, user } = row as { article: SelectArticleModel; user: SelectUserModel };
+			const { article, user } = row as { article: null | SelectArticleModel; user: SelectUserModel };
+
+			if (!article) {
+				continue;
+			}
 
 			const [bookmark] = await Postgres.connection
 				.select()

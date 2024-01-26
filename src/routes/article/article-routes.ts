@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 import { CreateArticleService } from 'src/domains/article/services/create-article-service';
 import { DeleteArticleByIdService } from 'src/domains/article/services/delete-article-by-id-service';
+import { GetAllArticlesService } from 'src/domains/article/services/get-all-articles-service';
 import { GetArticleByIdService } from 'src/domains/article/services/get-article-by-id-service';
 import { UpdateArticleByIdService } from 'src/domains/article/services/update-article-by-id-service';
 import { ToggleBookmarkService } from 'src/domains/bookmark/services/toggle-bookmark-service';
@@ -95,6 +96,7 @@ export function makeArticleRoutes() {
 	const getArticleByIdService = new GetArticleByIdService(articlePostgresRepository, userPostgresRepository);
 	const deleteArticleByIdService = new DeleteArticleByIdService(articlePostgresRepository, userPostgresRepository);
 	const updateArticleByIdService = new UpdateArticleByIdService(articlePostgresRepository, userPostgresRepository);
+	const getAllArticlesService = new GetAllArticlesService(articlePostgresRepository, userPostgresRepository);
 	const toggleBookmarkService = new ToggleBookmarkService(
 		bookmarkPostgresRepository,
 		articlePostgresRepository,
@@ -109,7 +111,17 @@ export function makeArticleRoutes() {
 
 			return c.json(response, httpStatus.CREATED);
 		})
+		.get('/', async c => {
+			const filters = getAllArticlesSchemas.request.parse({
+				order: c.req.query('order'),
+				userId: c.req.query('user'),
+			});
+			const loggedUserId = c.get('loggedUserId');
+			const orderedArticles = await getAllArticlesService.execute(loggedUserId, filters);
+			const response = getAllArticlesSchemas.response.parse(orderedArticles);
 
+			return c.json(response, httpStatus.OK);
+		})
 		.get('/:id', async c => {
 			const articleId = c.req.param('id');
 			const loggedUserId = c.get('loggedUserId');
