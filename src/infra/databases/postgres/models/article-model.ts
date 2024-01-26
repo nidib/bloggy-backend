@@ -2,7 +2,7 @@ import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
 
 import { schema } from 'src/infra/databases/postgres/models/_schema';
-import { SelectUserModel, userModel } from 'src/infra/databases/postgres/models/user-model';
+import { SelectUserModel } from 'src/infra/databases/postgres/models/user-model';
 
 export const articleModel = schema.table('article', {
 	id: uuid('id').primaryKey().defaultRandom(),
@@ -16,4 +16,4 @@ export const articleModel = schema.table('article', {
 
 export type InsertArticleModel = InferInsertModel<typeof articleModel>;
 export type SelectArticleModel = InferSelectModel<typeof articleModel>;
-export type SelectArticleWithUser = InsertArticleModel & { user: SelectUserModel };
+export type SelectArticleWithUser = InsertArticleModel & { user: SelectUserModel & { didBookmark: boolean } };
