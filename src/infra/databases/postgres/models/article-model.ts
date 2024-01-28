@@ -11,7 +11,6 @@ export const articleModel = schema.table('article', {
 	userId: uuid('user_id').notNull(),
 	createdAt: timestamp('created_at', { withTimezone: false }).notNull().defaultNow(),
 	updatedAt: timestamp('updated_at', { withTimezone: false }).notNull().defaultNow(),
-	deletedAt: timestamp('deleted_at', { withTimezone: false }),
 });
 
 export type InsertArticleModel = InferInsertModel<typeof articleModel>;

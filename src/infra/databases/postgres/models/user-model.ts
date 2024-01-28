@@ -10,7 +10,6 @@ export const userModel = schema.table('user', {
 	fullName: char('full_name', { length: 255 }).notNull(),
 	createdAt: timestamp('created_at', { withTimezone: false }).defaultNow().notNull(),
 	updatedAt: timestamp('updated_at', { withTimezone: false }).defaultNow().notNull(),
-	deletedAt: timestamp('deleted_at', { withTimezone: false }),
 });
 
 export type InsertUserModel = InferInsertModel<typeof userModel>;

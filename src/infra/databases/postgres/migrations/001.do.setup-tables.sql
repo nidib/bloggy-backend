@@ -8,8 +8,7 @@ CREATE TABLE IF NOT EXISTS "main"."user" (
 	"password" VARCHAR(255) NOT NULL,
 	"full_name" VARCHAR(255) NOT NULL,
 	"created_at" TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
-	"updated_at" TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
-	"deleted_at" TIMESTAMP DEFAULT NULL
+	"updated_at" TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc')
 );
 
 CREATE TABLE IF NOT EXISTS "main"."article" (
@@ -19,7 +18,6 @@ CREATE TABLE IF NOT EXISTS "main"."article" (
 	"user_id" UUID NOT NULL,
 	"created_at" TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
 	"updated_at" TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
-	"deleted_at" TIMESTAMP DEFAULT NULL,
 
 	FOREIGN KEY ("user_id") REFERENCES "main"."user"
 );
