@@ -19,6 +19,6 @@ export interface ArticleRepository {
 
 	getMany(
 		loggedUserId: string,
-		filters: { order: 'asc' | 'desc'; userId?: string }
+		filters: { order: 'asc' | 'desc'; userId?: string; queryOffset: number }
 	): Promise<SelectArticleWithUser[]>;
 }

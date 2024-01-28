@@ -46,6 +46,7 @@ const getAllArticlesSchemas = {
 	request: z.object({
 		order: z.enum(['asc', 'desc']),
 		userId: z.string().optional(),
+		queryOffset: z.number(),
 	}),
 	response: z.array(
 		z.object({
@@ -115,6 +116,7 @@ export function makeArticleRoutes() {
 			const filters = getAllArticlesSchemas.request.parse({
 				order: c.req.query('order'),
 				userId: c.req.query('user'),
+				queryOffset: c.req.query('page'),
 			});
 			const loggedUserId = c.get('loggedUserId');
 			const orderedArticles = await getAllArticlesService.execute(loggedUserId, filters);

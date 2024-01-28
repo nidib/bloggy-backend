@@ -33,7 +33,6 @@ export class UpdateArticleByIdService {
 			userId: existingArticle.userId,
 			createdAt: existingArticle.createdAt,
 			updatedAt: existingArticle.updatedAt,
-			deletedAt: existingArticle.deletedAt,
 		};
 
 		return this.articleRepository.updateOne(articleId, userId, articleToBeUpdated);

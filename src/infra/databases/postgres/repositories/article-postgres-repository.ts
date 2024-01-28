@@ -11,6 +11,8 @@ import {
 import { SelectUserModel, userModel } from 'src/infra/databases/postgres/models/user-model';
 import { Postgres } from 'src/infra/databases/postgres/postgres';
 
+const LIMIT_OF_ROWS = 10;
+
 export class ArticlePostgresRepository implements ArticleRepository {
 	async createOne(candidate: InsertArticleModel): Promise<SelectArticleModel> {
 		const [createdArticle] = await Postgres.connection.insert(articleModel).values(candidate).returning();
@@ -85,7 +87,7 @@ export class ArticlePostgresRepository implements ArticleRepository {
 
 	async getMany(
 		userId: string,
-		filters: { order: 'asc' | 'desc'; userId?: string }
+		filters: { order: 'asc' | 'desc'; userId?: string; queryOffset: number }
 	): Promise<SelectArticleWithUser[]> {
 		const orderByFnByOrder: Record<'asc' | 'desc', (a: SQLWrapper | AnyColumn) => SQL> = {
 			asc: asc,
@@ -103,7 +105,9 @@ export class ArticlePostgresRepository implements ArticleRepository {
 			.from(articleModel)
 			.fullJoin(userModel, eq(userModel.id, articleModel.userId))
 			.where(and(...queryFilters))
-			.orderBy(orderByFnByOrder[filters.order](articleModel.createdAt));
+			.orderBy(orderByFnByOrder[filters.order](articleModel.createdAt))
+			.limit(LIMIT_OF_ROWS)
+			.offset(filters.queryOffset);
 
 		let articles: SelectArticleWithUser[] = [];
 

@@ -3,7 +3,7 @@ import { UserRepository } from 'src/domains/user/repositories/user-repository';
 import { UserDoesNotExistException } from 'src/exceptions/user-does-not-exist-exception';
 import { SelectArticleWithUser } from 'src/infra/databases/postgres/models/article-model';
 
-type Filters = { order: 'asc' | 'desc'; userId?: string };
+type Filters = { order: 'asc' | 'desc'; userId?: string; queryOffset: number };
 
 export class GetAllArticlesService {
 	constructor(

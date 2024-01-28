@@ -21,7 +21,7 @@ describe('GetAllArticlesService', () => {
 			fullName: 'John Doe',
 		});
 
-		const articles = await getAllArticlesService.execute(createdUser.id, { order: 'asc' });
+		const articles = await getAllArticlesService.execute(createdUser.id, { order: 'asc', queryOffset: 0 });
 
 		expect(articles).toHaveLength(0);
 	});
@@ -66,6 +66,7 @@ describe('GetAllArticlesService', () => {
 
 		const articles = await getAllArticlesService.execute(user4.id, {
 			order: 'asc',
+			queryOffset: 0,
 		});
 
 		expect(articles).toHaveLength(3);
@@ -108,7 +109,7 @@ describe('GetAllArticlesService', () => {
 			createdAt: today,
 		});
 
-		const articles = await getAllArticlesService.execute(reader.id, { order: 'asc' });
+		const articles = await getAllArticlesService.execute(reader.id, { order: 'asc', queryOffset: 0 });
 
 		expect(articles.map(article => article.title)).toEqual(['anteontem', 'ontem', 'hoje']);
 	});
@@ -150,7 +151,7 @@ describe('GetAllArticlesService', () => {
 			createdAt: today,
 		});
 
-		const articles = await getAllArticlesService.execute(reader.id, { order: 'desc' });
+		const articles = await getAllArticlesService.execute(reader.id, { order: 'desc', queryOffset: 0 });
 
 		expect(articles.map(article => article.title)).toEqual(['hoje', 'ontem', 'anteontem']);
 	});
@@ -201,14 +202,17 @@ describe('GetAllArticlesService', () => {
 		const articlesOfUser1 = await getAllArticlesService.execute(user2.id, {
 			order: 'asc',
 			userId: user1.id,
+			queryOffset: 0,
 		});
 		const articlesOfUser2 = await getAllArticlesService.execute(user3.id, {
 			order: 'asc',
 			userId: user2.id,
+			queryOffset: 0,
 		});
 		const articlesOfUser3 = await getAllArticlesService.execute(user1.id, {
 			order: 'asc',
 			userId: user3.id,
+			queryOffset: 0,
 		});
 
 		expect(articlesOfUser1).toHaveLength(2);
@@ -249,9 +253,11 @@ describe('GetAllArticlesService', () => {
 
 		const user1ReaderArticles = await getAllArticlesService.execute(user1.id, {
 			order: 'asc',
+			queryOffset: 0,
 		});
 		const user2ReaderArticles = await getAllArticlesService.execute(user2.id, {
 			order: 'asc',
+			queryOffset: 0,
 		});
 
 		expect(user1ReaderArticles.map(article => article.user.didBookmark)).toEqual([false, true, false]);
@@ -264,7 +270,77 @@ describe('GetAllArticlesService', () => {
 		await expect(
 			getAllArticlesService.execute(randomUUID(), {
 				order: 'asc',
+				queryOffset: 0,
 			})
 		).rejects.toMatchObject(new UserDoesNotExistException());
+	});
+
+	it('Should retrieve only 10 articles if there are more than 10', async () => {
+		const getAllArticlesService = new GetAllArticlesService(articlePostgresRepository, userPostgresRepository);
+		const user1 = await userPostgresRepository.createOne({
+			username: 'johndoe1',
+			password: 'qwe123',
+			fullName: 'John Doe',
+		});
+		for (let i = 1; i <= 11; i++) {
+			await articlePostgresRepository.createOne({
+				title: `title ${i}`,
+				content: `content ${i}`,
+				userId: user1.id,
+			});
+		}
+
+		expect(
+			await getAllArticlesService.execute(user1.id, {
+				order: 'asc',
+				queryOffset: 0,
+			})
+		).toHaveLength(10);
+	});
+
+	it('Should retrieve 9 articles if there are only 9', async () => {
+		const getAllArticlesService = new GetAllArticlesService(articlePostgresRepository, userPostgresRepository);
+		const user1 = await userPostgresRepository.createOne({
+			username: 'johndoe1',
+			password: 'qwe123',
+			fullName: 'John Doe',
+		});
+		for (let i = 1; i <= 9; i++) {
+			await articlePostgresRepository.createOne({
+				title: `title ${i}`,
+				content: `content ${i}`,
+				userId: user1.id,
+			});
+		}
+
+		expect(
+			await getAllArticlesService.execute(user1.id, {
+				order: 'asc',
+				queryOffset: 0,
+			})
+		).toHaveLength(9);
+	});
+
+	it('Should retrieve the last 4 articles if there are 14 and the offset is 10', async () => {
+		const getAllArticlesService = new GetAllArticlesService(articlePostgresRepository, userPostgresRepository);
+		const user1 = await userPostgresRepository.createOne({
+			username: 'johndoe1',
+			password: 'qwe123',
+			fullName: 'John Doe',
+		});
+		for (let i = 1; i <= 14; i++) {
+			await articlePostgresRepository.createOne({
+				title: `title ${i}`,
+				content: `content ${i}`,
+				userId: user1.id,
+			});
+		}
+
+		const articles = await getAllArticlesService.execute(user1.id, {
+			order: 'asc',
+			queryOffset: 10,
+		});
+
+		expect(articles.map(item => item.title)).toEqual(['title 11', 'title 12', 'title 13', 'title 14']);
 	});
 });
