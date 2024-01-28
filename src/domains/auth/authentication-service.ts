@@ -16,7 +16,7 @@ export class AuthenticationService {
 			throw new UnauthorizedException();
 		}
 
-		const { userId } = await Auth.validateToken(token);
+		const { userId } = Auth.validateToken(token);
 		const existingUser = await this.userRepository.getOneById(userId);
 
 		if (!existingUser) {
