@@ -128,7 +128,7 @@ describe('UpdateArticleByIdService', () => {
 		expect(createdArticle.createdAt).toEqual(updatedArticle.createdAt);
 	});
 
-	it('Should keep the same updatedAt', async () => {
+	it('Should update the value of updatedAt', async () => {
 		const updateArticleByIdService = new UpdateArticleByIdService(
 			articlePostgresRepository,
 			userPostgresRepository
@@ -154,7 +154,8 @@ describe('UpdateArticleByIdService', () => {
 			soonToBeUpdatedArticle
 		);
 
-		expect(createdArticle.updatedAt).toEqual(updatedArticle.updatedAt);
+		expect(createdArticle.updatedAt).not.toEqual(updatedArticle.updatedAt);
+		expect(updatedArticle.updatedAt.getTime()).toBeGreaterThan(createdArticle.updatedAt.getTime());
 	});
 
 	it('Should throw an exception if an user tries to update an article that belongs to another user', async () => {

@@ -1,27 +1,46 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
-import { default as pg } from 'postgres';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import path from 'path';
+import { Client, Pool } from 'pg';
+import Postgrator from 'postgrator';
 
 import { envs } from 'src/infra/config/envs';
-import { migrator } from 'src/infra/databases/postgres/migrator';
 
-const noop = () => {};
+const connectionString = `${envs.databaseUrl}/${envs.databaseName}`;
+const pool = new Pool({
+	connectionString,
+});
 
-const databaseUrl = `${envs.databaseUrl}/${envs.databaseName}`;
-const client = pg(databaseUrl, { onnotice: noop });
-const ormConnection = drizzle(client, { logger: false });
+const ormConnection = drizzle(pool, { logger: false });
 
 export class Postgres {
 	static connection = ormConnection;
 
 	public static async closeConnection() {
-		return client.end();
+		await pool.end();
 	}
 
 	public static async healthCheck() {
-		await client`SELECT 1 as health_check`;
+		const client = await pool.connect();
+
+		await client.query('SELECT 1 as health_check');
 	}
 
 	static async migrate(): Promise<void> {
-		await migrator.migrate();
+		const client = new Client({ connectionString });
+
+		await client.connect();
+
+		const postgrator = new Postgrator({
+			migrationPattern: path.resolve(__dirname, 'migrations/*'),
+			driver: 'pg',
+			database: envs.databaseName,
+			schemaTable: 'main.migration_schema',
+			currentSchema: 'main',
+			execQuery(query) {
+				return client.query(query);
+			},
+		});
+
+		await postgrator.migrate();
 	}
 }

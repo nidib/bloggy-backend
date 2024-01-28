@@ -13,9 +13,9 @@ import { Postgres } from 'src/infra/databases/postgres/postgres';
 
 export class ArticlePostgresRepository implements ArticleRepository {
 	async createOne(candidate: InsertArticleModel): Promise<SelectArticleModel> {
-		const [createArticle] = await Postgres.connection.insert(articleModel).values(candidate).returning();
+		const [createdArticle] = await Postgres.connection.insert(articleModel).values(candidate).returning();
 
-		return createArticle;
+		return createdArticle;
 	}
 
 	async getOneById(id: string): Promise<null | SelectArticleModel> {
@@ -61,12 +61,12 @@ export class ArticlePostgresRepository implements ArticleRepository {
 		};
 	}
 
-	async updateOne(id: string, userId: string, article: InsertArticleModel): Promise<SelectArticleModel> {
+	async updateOne(id: string, userId: string, newArticle: Partial<InsertArticleModel>): Promise<SelectArticleModel> {
 		const [updatedArticle] = await Postgres.connection
 			.update(articleModel)
 			.set({
-				...article,
-				updatedAt: new Date(),
+				...newArticle,
+				updatedAt: sql`NOW() AT TIME ZONE 'utc'`,
 			})
 			.where(sql`${articleModel.id} = ${id} AND ${articleModel.userId} = ${userId}`)
 			.returning();
