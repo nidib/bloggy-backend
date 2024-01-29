@@ -87,7 +87,7 @@ export class ArticlePostgresRepository implements ArticleRepository {
 
 	async getMany(
 		userId: string,
-		filters: { order: 'asc' | 'desc'; userId?: string; queryOffset: number }
+		filters: { order: 'asc' | 'desc'; userId?: string; page: number }
 	): Promise<SelectArticleWithUser[]> {
 		const orderByFnByOrder: Record<'asc' | 'desc', (a: SQLWrapper | AnyColumn) => SQL> = {
 			asc: asc,
@@ -107,7 +107,7 @@ export class ArticlePostgresRepository implements ArticleRepository {
 			.where(and(...queryFilters))
 			.orderBy(orderByFnByOrder[filters.order](articleModel.createdAt))
 			.limit(LIMIT_OF_ROWS)
-			.offset(filters.queryOffset);
+			.offset(LIMIT_OF_ROWS * (filters.page - 1));
 
 		let articles: SelectArticleWithUser[] = [];
 
