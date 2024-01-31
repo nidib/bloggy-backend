@@ -13,18 +13,21 @@ describe('LoginUserService', () => {
 		const createUserService = new CreateUserService(userPostgresRepository);
 		const username = 'johndoe';
 		const password = 'qwe123';
-		await createUserService.execute({
+		const createdUser = await createUserService.execute({
 			username,
 			password,
 			fullName: 'John Doe',
 		});
 
-		const token = await loginUserService.execute({
+		const result = await loginUserService.execute({
 			username,
 			password,
 		});
 
-		expect(token).toBeTypeOf('string');
+		expect(result).toEqual({
+			token: expect.any(String),
+			userId: createdUser.id,
+		});
 	});
 
 	it('Should throw an exception if the username is invalid', async () => {
