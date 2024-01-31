@@ -36,8 +36,8 @@ const getArticleSchemas = {
 				fullName: z.string(),
 				didBookmark: z.boolean(),
 			}),
-			createdAt: z.date(),
-			updatedAt: z.date(),
+			createdAt: z.date().transform(d => d.toISOString()),
+			updatedAt: z.date().transform(d => d.toISOString()),
 		})
 		.nullable(),
 };
@@ -59,8 +59,8 @@ const getAllArticlesSchemas = {
 				fullName: z.string(),
 				didBookmark: z.boolean(),
 			}),
-			createdAt: z.date(),
-			updatedAt: z.date(),
+			createdAt: z.date().transform(d => d.toISOString()),
+			updatedAt: z.date().transform(d => d.toISOString()),
 		})
 	),
 };

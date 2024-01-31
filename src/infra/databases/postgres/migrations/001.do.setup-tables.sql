@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS "main"."user" (
 
 CREATE TABLE IF NOT EXISTS "main"."article" (
 	"id" UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-	"title" VARCHAR(50) NOT NULL,
+	"title" VARCHAR(100) NOT NULL,
 	"content" TEXT NOT NULL,
 	"user_id" UUID NOT NULL,
 	"created_at" TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),

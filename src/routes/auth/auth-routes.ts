@@ -25,6 +25,7 @@ const loginUserSchemas = {
 		password: z.string(),
 	}),
 	response: z.object({
+		id: z.string(),
 		token: z.string(),
 	}),
 };
@@ -45,8 +46,8 @@ export function makeAuthRoutes() {
 
 	routes.post('/login', async c => {
 		const payload = loginUserSchemas.request.parse(await c.req.json());
-		const token = await loginUserService.execute(payload);
-		const response = loginUserSchemas.response.parse({ token });
+		const { token, userId } = await loginUserService.execute(payload);
+		const response = loginUserSchemas.response.parse({ token, id: userId });
 
 		return c.json(response, httpStatus.OK);
 	});

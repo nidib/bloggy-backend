@@ -5,7 +5,7 @@ import { Auth } from 'src/infra/auth/auth';
 export class LoginUserService {
 	constructor(private readonly userRepository: UserRepository) {}
 
-	async execute(userCandidate: { username: string; password: string }): Promise<string> {
+	async execute(userCandidate: { username: string; password: string }): Promise<{ token: string; userId: string }> {
 		const existingUser = await this.userRepository.getOneByUsername(userCandidate.username);
 
 		if (!existingUser) {
@@ -18,6 +18,9 @@ export class LoginUserService {
 			throw new UserOrPasswordIncorrectException();
 		}
 
-		return Auth.makeAuthToken(existingUser.id);
+		return {
+			token: Auth.makeAuthToken(existingUser.id),
+			userId: existingUser.id,
+		};
 	}
 }

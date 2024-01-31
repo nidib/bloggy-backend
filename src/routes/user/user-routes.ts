@@ -9,8 +9,8 @@ const getUserSchemas = {
 	response: z.object({
 		id: z.string(),
 		fullName: z.string(),
-		createdAt: z.date(),
-		updatedAt: z.date(),
+		createdAt: z.date().transform(d => d.toISOString()),
+		updatedAt: z.date().transform(d => d.toISOString()),
 	}),
 };
 
