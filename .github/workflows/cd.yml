@@ -19,7 +19,7 @@ jobs:
                   file: ./.docker/Dockerfile
                   registry: registry.hub.docker.com
                   organization: nidib
-                  repository: live-docker-stats
+                  repository: bloggy-api
                   login: '${{ secrets.DOCKER_USERNAME }}'
                   password: '${{ secrets.DOCKER_PASSWORD }}'
                   platforms: linux/amd64
