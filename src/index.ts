@@ -19,7 +19,7 @@ async function main() {
 
 	const app: Options = {
 		hostname: '0.0.0.0',
-		port: envs.serverPort,
+		port: 8080,
 		fetch: makeApp().fetch,
 	};
 
