@@ -6,6 +6,7 @@ REST API para o projeto Bloggy
 
 -   Ter instalado o `node@20.9.0` e `docker`
 -   Ter um postgres rodando na porta 5432 com um database já criado chamado `bloggy`
+-   Para executar testes, ter um database criado chamado `bloggy_tests` ou o definido no `.env`
 -   Executar `cp .env-sample .env` e definir as variáveis de ambiente necessárias no arquivo `.env`
     -   `DATABASE_URL`: Obrigatório. Não deve possuir o nome do database no fim.
     -   `JWT_KEY`: Obrigatório: Key privada para geração do JWT

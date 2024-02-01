@@ -16,5 +16,6 @@ function getEnvOrThrow(env: string) {
 
 export const envs = {
 	databaseUrl: getEnvOrThrow('DATABASE_URL'),
+	databaseName: getEnv('DATABASE_NAME') ?? 'bloggy',
 	jwtKey: getEnvOrThrow('JWT_KEY'),
 } as const;
